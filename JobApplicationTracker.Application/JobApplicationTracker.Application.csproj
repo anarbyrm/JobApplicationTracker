@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JobApplicationTracker.DataAccess\JobApplicationTracker.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

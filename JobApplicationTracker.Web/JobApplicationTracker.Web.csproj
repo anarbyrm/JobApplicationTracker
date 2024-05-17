@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JobApplicationTracker.Application\JobApplicationTracker.Application.csproj" />
+  </ItemGroup>
+
 </Project>
