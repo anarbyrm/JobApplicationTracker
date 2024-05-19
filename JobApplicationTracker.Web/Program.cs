@@ -1,6 +1,9 @@
+using JobApplicationTracker.DataAccess;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddDataAccessServices(builder.Configuration);
 
 var app = builder.Build();
 
