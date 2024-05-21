@@ -64,3 +64,25 @@ body {
     transform: scaleX(1);
     transform-origin: bottom right;
 }
+
+.application-div table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.application-div table, th, td {
+    border: 1px solid black;
+}
+
+.application-div th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+.application-div th {
+    background-color: #f2f2f2;
+}
+
+.application-div tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
