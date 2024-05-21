@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 
 namespace JobApplicationTracker.DataAccess.Repositories
 {
-    public class ApplicationRepository : IJobApplicationRepository
+    public class JobApplicationRepository : IJobApplicationRepository
     {
         private readonly AppDbContext _dbContext;
 
-        public ApplicationRepository(AppDbContext dbContext)
+        public JobApplicationRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
