@@ -1,0 +1,17 @@
+﻿@model JobApplicationCreateModel
+@{
+    ViewData["Title"] = "Add job application";
+}
+
+<h2>
+    Add a new application.
+</h2>
+
+<form asp-action="Create" asp-controller="JobApplication" method="post">
+    <input asp-for="CompanyName">Company Name: </input>
+    <input asp-for="Position">Position: </input>
+    <input asp-for="AppliedAt">Applied At: </input>
+    <input asp-for="Status">Status: </input>
+    <textarea asp-for="Note">Note: </textarea>
+    <input type="submit" name="Add" value="Add" />
+</form>

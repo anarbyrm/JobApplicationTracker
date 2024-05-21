@@ -1,4 +1,4 @@
-﻿@model JobApplicationListViewModel
+﻿@model List<JobApplicationListViewModel>
 
 @{
     ViewData["Title"] = "Application list";
@@ -11,21 +11,26 @@
             <th>Position</th>
             <th>Status</th>
             <th>Apply Date</th>
-            <th>Notes/Updates</th>
+            <th></th>
         </tr>
-        <tr>
-            <td>Google</td>
-            <td>Jr. Software Engineer</td>
-            <td>Applied</td>
-            <td>17/02/2024</td>
-            <td>No updates</td>
-        </tr>
-        <tr>
-            <td>Microsoft</td>
-            <td>Backend Developer</td>
-            <td>Applied</td>
-            <td>02/03/2024</td>
-            <td>No updates</td>
-        </tr>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5">No job applications available.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (JobApplicationListViewModel item in Model)
+            {
+                <tr>
+                    <td>@item.CompanyName</td>
+                    <td>@item.Position</td>
+                    <td>@item.Status</td>
+                    <td>@item.AppliedAt</td>
+                    <td><a asp-action="Detail" asp-controller="JobApplication" asp-route-id="@item.Id">View</a></td>
+                </tr>
+            }
+        }
     </table>
 </div>

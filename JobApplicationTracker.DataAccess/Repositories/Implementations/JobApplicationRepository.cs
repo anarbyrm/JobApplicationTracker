@@ -14,12 +14,18 @@ namespace JobApplicationTracker.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<JobApplication>> GetAllAsync(Expression<Func<JobApplication, bool>> predicate)
+        public async Task<List<JobApplication>> GetAllAsync(
+            Expression<Func<JobApplication, bool>> predicate, 
+            int limit = 10, 
+            int offset = 0)
         {
             IQueryable<JobApplication> query = _dbContext.Applications;
             if (predicate != null)
                 query = query.Where(predicate);
-            return await query.ToListAsync();
+            return await query
+                .Take(limit)
+                .Skip(offset)
+                .ToListAsync();
         }
 
         public async Task<JobApplication> GetFirstAsync(Expression<Func<JobApplication, bool>> predicate)

@@ -57,7 +57,7 @@ namespace JobApplicationTracker.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Applications");
+                    b.ToTable("Applications", (string)null);
                 });
 #pragma warning restore 612, 618
         }

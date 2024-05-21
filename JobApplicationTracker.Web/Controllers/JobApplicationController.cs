@@ -16,10 +16,10 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [Route("")]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List([FromQuery] JobQueryModel query, PaginationModel pagination)
         {
-            //List<JobApplicationListViewModel> applications = await _service.GetAllAsync();
-            return View();
+            var applications = await _service.GetAllAsync(query, pagination);
+            return View(applications);
         }
 
         [Route("{id}")]
@@ -27,6 +27,20 @@ namespace JobApplicationTracker.Web.Controllers
         {
             var application = await _service.GetOneByIdAsync(id);
             return View(application);
+        }
+
+        [HttpGet("add")]
+        public IActionResult Create()
+        {
+            var newApplication = new JobApplicationCreateModel();
+            return View(newApplication);
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> Create(JobApplicationCreateModel jobApplication)
+        {
+            var app = await _service.CreateAsync(jobApplication);
+            return RedirectToAction("List");
         }
     }
 }
