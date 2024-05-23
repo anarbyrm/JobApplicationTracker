@@ -4,12 +4,20 @@
     ViewData["Title"] = $"Detail Application";
 }
 
-<h1>@Model.Position (@Model.CompanyName)</h1>
-<h6>
-    <strong>Applied at: </strong>@Model.AppliedAt | <strong>Application status: </strong>@Model.Status
-</h6>
-<hr />
-<br><br>
-<p>
-    @Model.Note
-</p>
+@if (Model is not null)
+{
+    <h1>@Model.Position (@Model.CompanyName)</h1>
+    <h6>
+        <strong>Applied at: </strong>@Model.AppliedAt | <strong>Application status: </strong>@Model.Status
+    </h6>
+    <hr />
+    <br>
+    <br>
+    <p>
+        @Model.Note
+    </p>
+}
+else
+{
+    <div asp-validation-summary="ModelOnly"></div>
+}

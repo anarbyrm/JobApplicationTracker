@@ -5,32 +5,45 @@
 }
 
 <div class="application-div">
-    <table class="application-list-table">
-        <tr>
-            <th>Company name</th>
-            <th>Position</th>
-            <th>Status</th>
-            <th>Apply Date</th>
-            <th></th>
-        </tr>
-        @if (!Model.Any())
+    @if (Model is not null)
+    {
+        @if (TempData.ContainsKey("SuccessMessage") && TempData["SuccessMessage"] != null)
         {
-            <tr>
-                <td colspan="5">No job applications available.</td>
-            </tr>
+            <div class="success-flush-message">
+                @TempData["SuccessMessage"]
+            </div>
         }
-        else
-        {
-            @foreach (JobApplicationListViewModel item in Model)
+        <table class="application-list-table">
+            <tr>
+                <th>Company name</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Apply Date</th>
+                <th></th>
+            </tr>
+            @if (!Model.Any())
             {
                 <tr>
-                    <td>@item.CompanyName</td>
-                    <td>@item.Position</td>
-                    <td>@item.Status</td>
-                    <td>@item.AppliedAt</td>
-                    <td><a asp-action="Detail" asp-controller="JobApplication" asp-route-id="@item.Id">View</a></td>
+                    <td colspan="5">No job applications available.</td>
                 </tr>
             }
-        }
-    </table>
+            else
+            {
+                @foreach (JobApplicationListViewModel item in Model)
+                {
+                    <tr>
+                        <td>@item.CompanyName</td>
+                        <td>@item.Position</td>
+                        <td>@item.Status</td>
+                        <td>@item.AppliedAt</td>
+                        <td><a asp-action="Detail" asp-controller="JobApplication" asp-route-id="@item.Id">View</a></td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+    else
+    {
+        <div asp-validation-summary="ModelOnly"></div>
+    }
 </div>

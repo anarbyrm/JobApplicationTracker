@@ -2,7 +2,7 @@
 {
     public enum ApplicationStatus
     {
-        Applied, // initial application
+        Applied = 1, // initial application
         Rejected,
         Accepted,
         OnGoing // next stage after application

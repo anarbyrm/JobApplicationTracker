@@ -16,15 +16,15 @@ namespace JobApplicationTracker.Application.Services
             _repository = repository;
             _mapper = mapper;
         }
-
+        // TODO: Implement exception handling
+        // TODO: null value handling
         public async Task<List<JobApplicationListViewModel>> GetAllAsync(JobQueryModel query, PaginationModel pagination)
         {
-            // todo: build predicate based on query
+            // TODO: build predicate based on query
             var applications = await _repository.GetAllAsync(
                 predicate: null, 
                 limit: pagination.Limit, 
                 offset: pagination.Offset);
-
             return _mapper.Map<List<JobApplicationListViewModel>>(applications);
         }
 
@@ -35,7 +35,7 @@ namespace JobApplicationTracker.Application.Services
         }
 
         public async Task<bool> CreateAsync(JobApplicationCreateModel createModel)
-        {
+        {               
             var newApplication = _mapper.Map<JobApplication>(createModel);
             var isDone = await _repository.AddAsync(newApplication);
             return isDone;

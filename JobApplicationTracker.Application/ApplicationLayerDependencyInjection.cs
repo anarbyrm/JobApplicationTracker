@@ -1,5 +1,8 @@
-﻿using JobApplicationTracker.Application.Automapper;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using JobApplicationTracker.Application.Automapper;
 using JobApplicationTracker.Application.Services;
+using JobApplicationTracker.Application.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JobApplicationTracker.Application
@@ -10,6 +13,7 @@ namespace JobApplicationTracker.Application
         {
             RegisterServices(services);
             RegisterMappingProfiles(services);
+            RegisterValidators(services);
             return services;
         }
 
@@ -21,6 +25,11 @@ namespace JobApplicationTracker.Application
         private static void RegisterMappingProfiles(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(IMappingProfileMarker));
+        }
+
+        private static void RegisterValidators(IServiceCollection services)
+        {
+            services.AddValidatorsFromAssemblyContaining<IValidatorMarker>();
         }
     }
 }

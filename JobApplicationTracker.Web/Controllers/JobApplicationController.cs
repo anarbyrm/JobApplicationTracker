@@ -1,5 +1,8 @@
-﻿using JobApplicationTracker.Application.Models;
+﻿using FluentValidation.Results;
+using JobApplicationTracker.Application.Exceptions;
+using JobApplicationTracker.Application.Models;
 using JobApplicationTracker.Application.Services;
+using JobApplicationTracker.Application.Validators;
 using JobApplicationTracker.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,31 +19,79 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [Route("")]
-        public async Task<IActionResult> List([FromQuery] JobQueryModel query, PaginationModel pagination)
+        public async Task<IActionResult> List([FromQuery] JobQueryModel query, [FromQuery] PaginationModel pagination)
         {
-            var applications = await _service.GetAllAsync(query, pagination);
-            return View(applications);
+            try
+            {
+                List<JobApplicationListViewModel> applications = await _service.GetAllAsync(query, pagination);
+                return View(applications);
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
+                return View();
+            }
         }
 
         [Route("{id}")]
         public async Task<IActionResult> Detail(Guid id)
         {
-            var application = await _service.GetOneByIdAsync(id);
-            return View(application);
+            try
+            {
+                JobApplicationDetailViewModel? application = await _service.GetOneByIdAsync(id);
+                return application is null 
+                    ? throw new ItemNotFoundException($"Job application with ID: {id} not found.") 
+                    : (IActionResult)View(application);
+            }
+            catch (Exception exc)
+            {
+                string errorMessage = "Unexpected error occured, please retry again later.";
+                if (exc is ItemNotFoundException)
+                    errorMessage = exc.Message;
+
+                ModelState.AddModelError("", errorMessage);
+                return View();
+            }
         }
 
         [HttpGet("add")]
         public IActionResult Create()
         {
-            var newApplication = new JobApplicationCreateModel();
+            JobApplicationCreateModel newApplication = new();
             return View(newApplication);
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> Create(JobApplicationCreateModel jobApplication)
+        public async Task<IActionResult> Create(JobApplicationCreateModel jobApplication, [FromServices] JobApplicationCreateValidator validator)
         {
-            var app = await _service.CreateAsync(jobApplication);
+            var result = await validator.ValidateAsync(jobApplication);
+            if (!result.IsValid)
+            {
+                AddErrorMessages(result.Errors);
+                return View(jobApplication);
+            }
+
+            try
+            {
+                await _service.CreateAsync(jobApplication);
+                TempData["SuccessMessage"] = "Application is successfully added";
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
+                return View(jobApplication);
+            }
+
             return RedirectToAction("List");
+        }
+
+        [NonAction]
+        private void AddErrorMessages(List<ValidationFailure> errors)
+        {
+            foreach (var error in errors)
+            {
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            }
         }
     }
 }

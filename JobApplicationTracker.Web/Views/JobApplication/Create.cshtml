@@ -1,4 +1,5 @@
 ﻿@model JobApplicationCreateModel
+@using JobApplicationTracker.Core.Enums
 @{
     ViewData["Title"] = "Add job application";
 }
@@ -8,10 +9,41 @@
 </h2>
 
 <form asp-action="Create" asp-controller="JobApplication" method="post">
-    <input asp-for="CompanyName">Company Name: </input>
-    <input asp-for="Position">Position: </input>
-    <input asp-for="AppliedAt">Applied At: </input>
-    <input asp-for="Status">Status: </input>
-    <textarea asp-for="Note">Note: </textarea>
+    <div asp-validation-summary="ModelOnly" class="error-message"></div>
+
+    <label asp-for="CompanyName"></label>
+    <br>
+    <input asp-for="CompanyName"/>
+    <br>
+    <span asp-validation-for="CompanyName" class="error-message"></span>
+    <br>
+
+    <label asp-for="Position"></label>
+    <br>
+    <input asp-for="Position"/>
+    <br>
+    <span asp-validation-for="Position" class="error-message"></span>
+    <br>
+
+    <label asp-for="AppliedAt"></label>
+    <br>
+    <input asp-for="AppliedAt"/>
+    <br>
+    <span asp-validation-for="AppliedAt" class="error-message"></span>
+    <br>
+
+    <label asp-for="Status"></label>
+    <br>
+    <select asp-for="Status" asp-items="Html.GetEnumSelectList<ApplicationStatus>()"></select>
+    <br>
+    <span asp-validation-for="Status" class="error-message"></span>
+    <br>
+
+    <label asp-for="Note"></label>
+    <br>
+    <textarea asp-for="Note"></textarea>
+    <br>
+    <span asp-validation-for="Note" class="error-message"></span>
+    <br>
     <input type="submit" name="Add" value="Add" />
 </form>
