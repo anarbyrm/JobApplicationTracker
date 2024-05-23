@@ -5,7 +5,7 @@ namespace JobApplicationTracker.Application.Services
 {
     public interface IJobApplicationService
     {
-        Task<List<JobApplicationListViewModel>> GetAllAsync(JobQueryModel query, PaginationModel pagination);
+        Task<(List<JobApplicationListViewModel>, int)> GetAllAndCountAsync(JobQueryModel query, PaginationModel pagination);
         Task<JobApplicationDetailViewModel> GetOneByIdAsync(Guid Id);
         Task<bool> CreateAsync(JobApplicationCreateModel createModel);
         Task<bool> UpdateAsync(Guid Id, JobApplicationUpdateModel updateModel);

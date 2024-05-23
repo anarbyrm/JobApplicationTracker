@@ -18,14 +18,14 @@ namespace JobApplicationTracker.Application.Services
         }
         // TODO: Implement exception handling
         // TODO: null value handling
-        public async Task<List<JobApplicationListViewModel>> GetAllAsync(JobQueryModel query, PaginationModel pagination)
+        public async Task<(List<JobApplicationListViewModel>, int)> GetAllAndCountAsync(JobQueryModel query, PaginationModel pagination)
         {
             // TODO: build predicate based on query
-            var applications = await _repository.GetAllAsync(
+            var (applications, totalItemCount) = await _repository.GetAllAndCountAsync(
                 predicate: null, 
                 limit: pagination.Limit, 
                 offset: pagination.Offset);
-            return _mapper.Map<List<JobApplicationListViewModel>>(applications);
+            return (_mapper.Map<List<JobApplicationListViewModel>>(applications), totalItemCount);
         }
 
         public async Task<JobApplicationDetailViewModel> GetOneByIdAsync(Guid Id)

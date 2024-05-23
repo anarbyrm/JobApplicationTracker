@@ -41,6 +41,27 @@
                 }
             }
         </table>
+
+        // pagination
+        <div>
+            @{
+                int.TryParse(Context.Request.Query["offset"], out int currentOffset);
+                int.TryParse(Context.Request.Query["limit"], out int currentLimit);
+                currentLimit = currentLimit > 0 ? currentLimit : 10;
+                int previousOffset = currentOffset > currentLimit ? currentOffset - currentLimit : 0;
+                int totalItemCount = ViewBag.TotalItemCount;
+            }
+
+            @if (currentOffset > 0)
+            {
+                <a href="@Url.Link("item-list", new { limit = currentLimit, offset = previousOffset })">&larr;Previous</a>
+            }
+
+            @if (currentLimit + currentOffset < totalItemCount)
+            {
+                <a href="@Url.Link("item-list", new { limit = currentLimit, offset = currentOffset + currentLimit })">Next&rarr;</a>
+            }
+        </div>
     }
     else
     {

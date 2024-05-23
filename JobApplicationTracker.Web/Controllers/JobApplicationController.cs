@@ -11,19 +11,20 @@ namespace JobApplicationTracker.Web.Controllers
     [Route("applications")]
     public class JobApplicationController : Controller
     {
-        private IJobApplicationService _service;
+        private readonly IJobApplicationService _service;
 
         public JobApplicationController(IJobApplicationService service)
         {
             _service = service;
         }
 
-        [Route("")]
+        [Route("", Name = "item-list")]
         public async Task<IActionResult> List([FromQuery] JobQueryModel query, [FromQuery] PaginationModel pagination)
         {
             try
             {
-                List<JobApplicationListViewModel> applications = await _service.GetAllAsync(query, pagination);
+                var (applications, totalItemCount) = await _service.GetAllAndCountAsync(query, pagination);
+                ViewBag.TotalItemCount = totalItemCount;
                 return View(applications);
             }
             catch
