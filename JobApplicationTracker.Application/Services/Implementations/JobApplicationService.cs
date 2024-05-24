@@ -41,9 +41,12 @@ namespace JobApplicationTracker.Application.Services
             return isDone;
         }
 
-        public Task<bool> DeleteAsync(Guid Id)
+        public async Task<bool> DeleteAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            var application = await _repository.GetFirstAsync(ja => ja.Id == Id);
+            if (application is null)
+                return false;
+            return await _repository.DeleteAsync(application);
         }
 
         public Task<bool> UpdateAsync(Guid Id, JobApplicationUpdateModel updateModel)

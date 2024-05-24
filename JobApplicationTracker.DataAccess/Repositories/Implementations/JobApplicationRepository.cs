@@ -38,7 +38,7 @@ namespace JobApplicationTracker.DataAccess.Repositories
 
         public async Task<bool> AddAsync(JobApplication entity)
         {
-            _dbContext.Applications.Add(entity);
+            await _dbContext.Applications.AddAsync(entity);
             return await SaveAsync();
         }
 

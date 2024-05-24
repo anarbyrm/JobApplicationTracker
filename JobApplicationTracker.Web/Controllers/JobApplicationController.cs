@@ -94,5 +94,12 @@ namespace JobApplicationTracker.Web.Controllers
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             }
         }
+
+        [HttpPost("{id}/remove")]
+        public async Task<IActionResult> Remove(Guid id)
+        {
+            await _service.DeleteAsync(id);
+            return RedirectToAction("List");
+        }
     }
 }
