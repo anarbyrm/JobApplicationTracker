@@ -12,8 +12,15 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseDeveloperExceptionPage();
     app.UseHsts();
+}
+else
+{
+    // todo: add error page
+    // todo: add page not found page
+    app.UseExceptionHandler("/Home/Error");
+
 }
 
 app.UseHttpsRedirection();
@@ -21,10 +28,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapDefaultControllerRoute();
 
 app.Run();

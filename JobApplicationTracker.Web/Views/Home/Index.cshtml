@@ -2,6 +2,13 @@
     ViewData["title"] = "Welcome to JAT";
 }
 
+@if (TempData.ContainsKey("SuccessMessage") && TempData["SuccessMessage"] != null)
+{
+    <div class="success-flush-message">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <div class="welcome-div">
     <h1>
         Welcome to Job Application Tracker!

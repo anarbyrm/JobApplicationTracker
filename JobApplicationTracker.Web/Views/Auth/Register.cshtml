@@ -1,0 +1,26 @@
+﻿@model JobApplicationTracker.Application.Models.RegisterModel
+
+@{
+    ViewData["Title"] = "Join us!";
+
+}
+
+<h1>Create account</h1>
+<hr />
+
+<form asp-action="Register" asp-controller="Auth" method="post">
+    <div asp-validation-summary="All" class="error-message"></div>
+
+    <label asp-for="Username"></label>
+    <br>
+    <input asp-for="Username" type="text" />
+    <br>
+
+    <label asp-for="Password"></label>
+    <br>
+    <input asp-for="Password" type="password" />
+    <br>
+
+    <input type="submit" name="Sign In" value="Sign In" />
+</form>
+

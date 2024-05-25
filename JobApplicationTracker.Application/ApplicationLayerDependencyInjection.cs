@@ -5,6 +5,7 @@ using JobApplicationTracker.Application.Validators;
 using JobApplicationTracker.DataAccess.DbContexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace JobApplicationTracker.Application
 {
@@ -13,6 +14,7 @@ namespace JobApplicationTracker.Application
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
         {
             RegisterIdentity(services);
+            ConfigureCookieSettings(services);
             RegisterServices(services);
             RegisterMappingProfiles(services);
             RegisterValidators(services);
@@ -44,7 +46,12 @@ namespace JobApplicationTracker.Application
 
         private static void ConfigureCookieSettings(IServiceCollection services)
         {
-            // cookie settings
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                options.LoginPath = "/auth/login";
+            });
         }
     }
 }
