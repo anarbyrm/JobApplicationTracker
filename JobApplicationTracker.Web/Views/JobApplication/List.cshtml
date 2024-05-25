@@ -37,7 +37,9 @@
                         <td>@item.Status</td>
                         <td>@item.AppliedAt</td>
                         <td>
+                            <a asp-action="Create" asp-controller="JobApplication">Add</a>
                             <a asp-action="Detail" asp-controller="JobApplication" asp-route-id="@item.Id">View</a>
+                            <a asp-action="Edit" asp-controller="JobApplication" asp-route-id="@item.Id">Edit</a>
 
                             <form asp-action="Remove" asp-controller="JobApplication" asp-route-id="@item.Id" method="post">
                                 <input type="submit" name="Remove" value="Remove" />

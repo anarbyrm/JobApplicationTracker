@@ -7,6 +7,7 @@
 @if (Model is not null)
 {
     <h1>@Model.Position (@Model.CompanyName)</h1>
+    <a asp-action="Edit" asp-controller="JobApplication" asp-route-id="@Model.Id">Edit</a>
     <h6>
         <strong>Applied at: </strong>@Model.AppliedAt | <strong>Application status: </strong>@Model.Status
     </h6>

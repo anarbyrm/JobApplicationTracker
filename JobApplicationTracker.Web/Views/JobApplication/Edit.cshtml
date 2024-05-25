@@ -1,0 +1,29 @@
+﻿@model JobApplicationDetailViewModel
+@using JobApplicationTracker.Core.Enums
+
+@{
+    ViewData["Title"] = "Update application";
+}
+
+@if (Model is not null)
+{
+    <h1>Update application ID: @Model.Id</h1>
+    <hr />
+
+    <form asp-action="Edit" asp-controller="JobApplication" asp-route-id="@Model.Id" method="post">
+        <label asp-for="Note"></label>
+        <br>
+        <input asp-for="Note" />
+        <br>
+        <span asp-validation-for="Note" class="error-message"></span>
+        <br>
+
+        <label asp-for="Status"></label>
+        <br>
+        <select asp-for="Status" asp-items="Html.GetEnumSelectList<ApplicationStatus>()"></select>
+        <br>
+        <span asp-validation-for="Note" class="error-message"></span>
+        <br><br>
+        <input type="submit" name="Update" value="Update" />
+    </form>
+}

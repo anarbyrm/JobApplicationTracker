@@ -1,4 +1,4 @@
-﻿using FluentValidation.Results;
+﻿using FluentValidation.AspNetCore;
 using JobApplicationTracker.Application.Exceptions;
 using JobApplicationTracker.Application.Models;
 using JobApplicationTracker.Application.Services;
@@ -19,7 +19,9 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [Route("", Name = "item-list")]
-        public async Task<IActionResult> List([FromQuery] JobQueryModel query, [FromQuery] PaginationModel pagination)
+        public async Task<IActionResult> List(
+            [FromQuery] JobQueryModel query, 
+            [FromQuery] PaginationModel pagination)
         {
             try
             {
@@ -29,6 +31,7 @@ namespace JobApplicationTracker.Web.Controllers
             }
             catch
             {
+                // todo: implement proper error page
                 ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
                 return View();
             }
@@ -63,12 +66,14 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> Create(JobApplicationCreateModel jobApplication, [FromServices] JobApplicationCreateValidator validator)
+        public async Task<IActionResult> Create(
+            [FromForm] JobApplicationCreateModel jobApplication, 
+            [FromServices] JobApplicationCreateValidator validator)
         {
             var result = await validator.ValidateAsync(jobApplication);
             if (!result.IsValid)
             {
-                AddErrorMessages(result.Errors);
+                result.AddToModelState(ModelState);
                 return View(jobApplication);
             }
 
@@ -86,20 +91,55 @@ namespace JobApplicationTracker.Web.Controllers
             return RedirectToAction("List");
         }
 
-        [NonAction]
-        private void AddErrorMessages(List<ValidationFailure> errors)
-        {
-            foreach (var error in errors)
-            {
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-            }
-        }
-
         [HttpPost("{id}/remove")]
         public async Task<IActionResult> Remove(Guid id)
         {
-            await _service.DeleteAsync(id);
+            try
+            {
+                await _service.DeleteAsync(id);
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
+                return View();
+            }
             return RedirectToAction("List");
+        }
+
+        [HttpGet("{id}/edit")]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var application = await _service.GetOneByIdAsync(id);
+            if (application is null)
+                // redirect to error page
+                return View();
+            return View(application);
+        }
+
+        [HttpPost("{id}/edit")]
+        public async Task<IActionResult> Edit(
+            Guid id, 
+            [FromForm] JobApplicationUpdateModel updatedJobApplication,
+            [FromServices] JobApplicationUpdateValidator validator)
+        {
+            var result = await validator.ValidateAsync(updatedJobApplication);
+            if (!result.IsValid)
+            {
+                result.AddToModelState(ModelState);
+                var application = await _service.GetOneByIdAsync(id);
+                return View("Edit", application);
+            }
+            try
+            {
+                await _service.UpdateAsync(id, updatedJobApplication);
+                TempData["SuccesMessage"] = $"Update action for application ID: {id} is successful";
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
+                return View();
+            }
+            return RedirectToAction("Detail", new { id });
         }
     }
 }
