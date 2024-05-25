@@ -1,10 +1,11 @@
 ﻿using JobApplicationTracker.Core.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace JobApplicationTracker.DataAccess.DbContexts
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext
     {
         public DbSet<JobApplication> Applications { get; set; }
 

@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
 using JobApplicationTracker.Application.Automapper;
 using JobApplicationTracker.Application.Services;
 using JobApplicationTracker.Application.Validators;
+using JobApplicationTracker.DataAccess.DbContexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JobApplicationTracker.Application
@@ -11,6 +12,7 @@ namespace JobApplicationTracker.Application
     {
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
         {
+            RegisterIdentity(services);
             RegisterServices(services);
             RegisterMappingProfiles(services);
             RegisterValidators(services);
@@ -30,6 +32,19 @@ namespace JobApplicationTracker.Application
         private static void RegisterValidators(IServiceCollection services)
         {
             services.AddValidatorsFromAssemblyContaining<IValidatorMarker>();
+        }
+
+        private static void RegisterIdentity(IServiceCollection services)
+        {
+            services
+                .AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+        }
+
+        private static void ConfigureCookieSettings(IServiceCollection services)
+        {
+            // cookie settings
         }
     }
 }
