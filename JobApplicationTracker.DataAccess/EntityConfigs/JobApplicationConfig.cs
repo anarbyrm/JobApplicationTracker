@@ -16,6 +16,11 @@ namespace JobApplicationTracker.DataAccess.EntityConfigs
                 .HasMaxLength(150);
             builder.Property(ja => ja.Note)
                 .HasMaxLength(500);
+            // job application - user relationship (foreign key)
+            builder
+                .HasOne(ja => ja.User)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

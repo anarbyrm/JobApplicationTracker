@@ -1,4 +1,5 @@
 ﻿using JobApplicationTracker.Core.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace JobApplicationTracker.Core.Entities
 {
@@ -9,5 +10,7 @@ namespace JobApplicationTracker.Core.Entities
         public DateTime AppliedAt { get; set; }
         public ApplicationStatus Status { get; set; }
         public string Note { get; set; }
+        public IdentityUser User { get; set; }
+
     }
 }
