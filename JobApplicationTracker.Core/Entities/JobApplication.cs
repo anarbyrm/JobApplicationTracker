@@ -10,6 +10,7 @@ namespace JobApplicationTracker.Core.Entities
         public DateTime AppliedAt { get; set; }
         public ApplicationStatus Status { get; set; }
         public string Note { get; set; }
+        public string UserId { get; set; }
         public IdentityUser User { get; set; }
 
     }

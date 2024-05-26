@@ -15,19 +15,23 @@ namespace JobApplicationTracker.DataAccess.Repositories
         }
 
         public async Task<(List<JobApplication>, int)> GetAllAndCountAsync(
-            Expression<Func<JobApplication, bool>> predicate, 
+            Expression<Func<JobApplication, bool>> predicate,
             int limit,
             int offset)
         {
             IQueryable<JobApplication> query = _dbContext.Applications;
-            int totalItemCount = query.Count();
+
             if (predicate != null)
                 query = query.Where(predicate);
+
+            int totalItemCount = query.Count();
+
             var applications = await query
                 .OrderByDescending(ja => ja.CreatedOn)
                 .Skip(offset)
                 .Take(limit)
                 .ToListAsync();
+
             return (applications, totalItemCount);
         }
 

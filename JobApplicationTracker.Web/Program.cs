@@ -4,6 +4,7 @@ using JobApplicationTracker.Application;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 // dependency injection from layers
 builder.Services.AddDataAccessServices(builder.Configuration);
 builder.Services.AddApplicationDependencies();
