@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Page Not Found";
+    TempData.TryGetValue("ErrorMessage", out var errorMessage);
+
+    if (errorMessage != null)
+    {
+        ViewData["Title"] = "Item Not Found";
+    }
+
+}
+
+<h1>Oops!</h1>
+<p>Error code: 404</p>
+<hr />
+@if (errorMessage != null)
+{
+    <h4>@errorMessage</h4>
+}
+else
+{
+    <h4>We can't seem to find the page you're looking for.</h4>
+}
+
+<p>Here are some helpful links:</p>
+<ul>
+    <li><a href="/">Home</a></li>
+</ul>

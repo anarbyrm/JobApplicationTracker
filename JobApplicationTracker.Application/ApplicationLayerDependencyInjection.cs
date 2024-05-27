@@ -50,7 +50,7 @@ namespace JobApplicationTracker.Application
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
                 options.LoginPath = "/auth/login";
-                options.AccessDeniedPath = "/error/access-denied";
+                options.AccessDeniedPath = "/error/forbidden";
             });
         }
     }

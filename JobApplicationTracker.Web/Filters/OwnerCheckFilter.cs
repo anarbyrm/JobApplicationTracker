@@ -17,7 +17,7 @@ namespace JobApplicationTracker.Web.Filters
             var itemGuid = Guid.Parse(applicationId.ToString());
             var application = await service.GetOneByIdAsync(itemGuid);
 
-            if (application.UserId != currentUserId)
+            if (application != null && application.UserId != currentUserId)
             {
                 context.Result = new ForbidResult();
                 return;

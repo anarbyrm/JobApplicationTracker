@@ -32,11 +32,9 @@ namespace JobApplicationTracker.Web.Controllers
                 ViewBag.TotalItemCount = totalItemCount;
                 return View(applications);
             }
-            catch
+            catch (Exception exc)
             {
-                // todo: implement proper error page
-                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
-                return View();
+                return RedirectToErrorPage(exc);
             }
         }
 
@@ -46,19 +44,12 @@ namespace JobApplicationTracker.Web.Controllers
         {
             try
             {
-                JobApplicationDetailViewModel? application = await _service.GetOneByIdAsync(id);
-                return application is null 
-                    ? throw new ItemNotFoundException($"Job application with ID: {id} not found.") 
-                    : (IActionResult)View(application);
+                JobApplicationDetailViewModel? application = await GetApplicationOrThrowException(id); 
+                return View(application);
             }
             catch (Exception exc)
             {
-                string errorMessage = "Unexpected error occured, please retry again later.";
-                if (exc is ItemNotFoundException)
-                    errorMessage = exc.Message;
-
-                ModelState.AddModelError("", errorMessage);
-                return View();
+                return RedirectToErrorPage(exc);
             }
         }
 
@@ -86,10 +77,9 @@ namespace JobApplicationTracker.Web.Controllers
                 await _service.CreateAsync(jobApplication);
                 TempData["SuccessMessage"] = "Application is successfully added";
             }
-            catch
+            catch (Exception exc)
             {
-                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
-                return View(jobApplication);
+                return RedirectToErrorPage(exc);
             }
 
             return RedirectToAction("List");
@@ -103,10 +93,9 @@ namespace JobApplicationTracker.Web.Controllers
             {
                 await _service.DeleteAsync(id);
             }
-            catch
+            catch (Exception exc)
             {
-                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
-                return View();
+                return RedirectToErrorPage(exc);
             }
             return RedirectToAction("List");
         }
@@ -115,11 +104,15 @@ namespace JobApplicationTracker.Web.Controllers
         [OwnerCheckFilter]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var application = await _service.GetOneByIdAsync(id);
-            if (application is null)
-                // redirect to error page
-                return View();
-            return View(application);
+            try
+            {
+                JobApplicationDetailViewModel application = await GetApplicationOrThrowException(id);
+                return View(application);
+            }
+            catch (Exception exc)
+            {
+                return RedirectToErrorPage(exc);
+            }
         }
 
         [HttpPost("{id}/edit")]
@@ -129,24 +122,50 @@ namespace JobApplicationTracker.Web.Controllers
             [FromForm] JobApplicationUpdateModel updatedJobApplication,
             [FromServices] JobApplicationUpdateValidator validator)
         {
-            var result = await validator.ValidateAsync(updatedJobApplication);
-            if (!result.IsValid)
-            {
-                result.AddToModelState(ModelState);
-                var application = await _service.GetOneByIdAsync(id);
-                return View("Edit", application);
-            }
             try
             {
+                var result = await validator.ValidateAsync(updatedJobApplication);
+
+                if (!result.IsValid)
+                {
+                    result.AddToModelState(ModelState);
+                    var application = await GetApplicationOrThrowException(id);
+                    return View("Edit", application);
+                }
+            
                 await _service.UpdateAsync(id, updatedJobApplication);
                 TempData["SuccesMessage"] = $"Update action for application ID: {id} is successful";
             }
-            catch
+            catch (Exception exc)
             {
-                ModelState.AddModelError("", "Unexpected error occured, please retry again later.");
-                return View();
+                return RedirectToErrorPage(exc);
             }
             return RedirectToAction("Detail", new { id });
+        }
+
+        private IActionResult RedirectToErrorPage(Exception exc)
+        {
+            string errorMessage = "Unexpected error occured, please retry again later.";
+            string actionName = "Index";
+
+            if (exc is ItemNotFoundException)
+            {
+                errorMessage = exc.Message;
+                actionName = "ItemOrPageNotFound";
+            }
+
+            TempData["ErrorMessage"] = errorMessage;
+            return RedirectToAction(actionName, "Error");
+        }
+
+        private async Task<JobApplicationDetailViewModel> GetApplicationOrThrowException(Guid id)
+        {
+            var application = await _service.GetOneByIdAsync(id);
+
+            if (application is null)
+                throw new ItemNotFoundException($"Job application with ID: {id} not found.");
+
+            return application;
         }
     }
 }
