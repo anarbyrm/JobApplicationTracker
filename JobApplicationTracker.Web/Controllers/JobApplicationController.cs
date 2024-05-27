@@ -4,6 +4,7 @@ using JobApplicationTracker.Application.Models;
 using JobApplicationTracker.Application.Services;
 using JobApplicationTracker.Application.Validators;
 using JobApplicationTracker.Application.ViewModels;
+using JobApplicationTracker.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,7 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [Route("{id}")]
+        [OwnerCheckFilter]
         public async Task<IActionResult> Detail(Guid id)
         {
             try
@@ -94,6 +96,7 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [HttpPost("{id}/remove")]
+        [OwnerCheckFilter]
         public async Task<IActionResult> Remove(Guid id)
         {
             try
@@ -109,6 +112,7 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [HttpGet("{id}/edit")]
+        [OwnerCheckFilter]
         public async Task<IActionResult> Edit(Guid id)
         {
             var application = await _service.GetOneByIdAsync(id);
@@ -119,6 +123,7 @@ namespace JobApplicationTracker.Web.Controllers
         }
 
         [HttpPost("{id}/edit")]
+        [OwnerCheckFilter]
         public async Task<IActionResult> Edit(
             Guid id, 
             [FromForm] JobApplicationUpdateModel updatedJobApplication,

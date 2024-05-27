@@ -20,7 +20,7 @@ else
 {
     // todo: add error page
     // todo: add page not found page
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/error");
 
 }
 

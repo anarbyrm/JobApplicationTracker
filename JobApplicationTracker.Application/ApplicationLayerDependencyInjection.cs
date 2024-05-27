@@ -5,7 +5,6 @@ using JobApplicationTracker.Application.Validators;
 using JobApplicationTracker.DataAccess.DbContexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace JobApplicationTracker.Application
 {
@@ -51,6 +50,7 @@ namespace JobApplicationTracker.Application
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
                 options.LoginPath = "/auth/login";
+                options.AccessDeniedPath = "/error/access-denied";
             });
         }
     }

@@ -41,9 +41,7 @@ namespace JobApplicationTracker.Application.Services
 
         public async Task<JobApplicationDetailViewModel> GetOneByIdAsync(Guid Id)
         {
-            string? userId = GetCurrentUserId();
-            var application = await _repository.GetFirstAsync(
-                ja => ja.Id == Id && ja.User.Id == userId);
+            var application = await _repository.GetFirstAsync(ja => ja.Id == Id);
             return _mapper.Map<JobApplicationDetailViewModel>(application);
         }
 
@@ -57,9 +55,7 @@ namespace JobApplicationTracker.Application.Services
 
         public async Task<bool> DeleteAsync(Guid Id)
         {
-            string? userId = GetCurrentUserId();
-            var application = await _repository.GetFirstAsync(
-                ja => ja.Id == Id && ja.User.Id == userId);
+            var application = await _repository.GetFirstAsync(ja => ja.Id == Id );
 
             if (application is null)
                 return false;
@@ -69,9 +65,7 @@ namespace JobApplicationTracker.Application.Services
 
         public async Task<bool> UpdateAsync(Guid Id, JobApplicationUpdateModel updateModel)
         {
-            string? userId = GetCurrentUserId();
-            var application = await _repository.GetFirstAsync(
-                ja => ja.Id == Id && ja.User.Id == userId);
+            var application = await _repository.GetFirstAsync(ja => ja.Id == Id);
 
             if (application is null)
                 return false;

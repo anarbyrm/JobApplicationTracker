@@ -10,5 +10,6 @@ namespace JobApplicationTracker.Application.ViewModels
         public ApplicationStatus Status { get; set; }
         public DateTime AppliedAt { get; set; }
         public string Note {  get; set; }
+        public string UserId { get; set; }
     }
 }
